@@ -1,0 +1,42 @@
+{% extends 'charts.html' %}
+
+{% block content %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <canvas id="myChart" width="400" height="400"></canvas>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+        <script type="text/javascript">
+        var interval = 2000;  // 1000 = 1 second, 3000 = 3 seconds
+        var myBarChart;
+            $.ajax({
+            method: "GET",
+            url: "/barchart",
+            data: {},
+            success: function(data) {
+                console.log(data.bar) // check out how data is structured
+
+                var ctx = document.getElementById("myChart").getContext("2d");
+                
+                myBarChart = new Chart(ctx).Bar(data.bar);
+               
+            },
+            complete: function (data) {
+                    // Schedule the next
+                    setTimeout(doAjax, interval);
+            }
+            })
+
+        function doAjax() {
+            
+            setTimeout(function(){
+                
+                myBarChart.addData([Math.random()*Math.floor(100),Math.random()*Math.floor(100), Math.random()*Math.floor(100)], "some company");
+            },interval);            
+            complete: {
+                setTimeout(doAjax, interval);
+            }
+        }
+        </script>
+        
+        
+{% endblock %}
